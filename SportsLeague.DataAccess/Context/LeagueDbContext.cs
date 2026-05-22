@@ -19,7 +19,8 @@ namespace SportsLeague.DataAccess.Context
         public DbSet<MatchResult> MatchResults => Set<MatchResult>();
         public DbSet<Goal> Goals => Set<Goal>();
         public DbSet<Card> Cards => Set<Card>();
-
+        public DbSet<Sponsor> Sponsors { get; set; }
+        public DbSet<TournamentSponsor> TournamentSponsors { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -249,6 +250,49 @@ namespace SportsLeague.DataAccess.Context
                       .HasForeignKey(c => c.PlayerId)
                       .OnDelete(DeleteBehavior.Restrict);
             });
+
+            modelBuilder.Entity<Sponsor>()
+
+    .HasIndex(s => s.Name)
+
+    .IsUnique();
+
+            modelBuilder.Entity<TournamentSponsor>()
+
+                .HasOne(ts => ts.Tournament)
+
+                .WithMany(t => t.TournamentSponsors)
+
+                .HasForeignKey(ts => ts.TournamentId);
+
+            modelBuilder.Entity<TournamentSponsor>()
+
+                .HasOne(ts => ts.Sponsor)
+
+                .WithMany(s => s.TournamentSponsors)
+
+                .HasForeignKey(ts => ts.SponsorId);
+
+            modelBuilder.Entity<TournamentSponsor>()
+
+                .HasIndex(ts => new
+
+                {
+
+                    ts.TournamentId,
+
+                    ts.SponsorId
+
+                })
+
+                .IsUnique();
+
+            modelBuilder.Entity<TournamentSponsor>()
+
+                .Property(ts => ts.ContractAmount)
+
+                .HasPrecision(18, 2);
+
         }
     }
 }
