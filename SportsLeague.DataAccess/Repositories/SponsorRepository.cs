@@ -6,10 +6,8 @@ namespace SportsLeague.DataAccess.Repositories;
 
 public class SponsorRepository : GenericRepository<Sponsor>, ISponsorRepository
 {
-    private readonly LeagueDbContext _context;
     public SponsorRepository(LeagueDbContext context) : base(context)
     {
-        _context = context;
     }
     public async Task<bool> ExistsByNameAsync(string name)
     {
